@@ -13,3 +13,4 @@ VIDEO_SCRIPT.md
 .venv
 __pycache__
 *.pyc
+.DS_Store

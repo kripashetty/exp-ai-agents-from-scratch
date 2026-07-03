@@ -18,3 +18,20 @@ final answer ever produced — confirmed by the eval stats from that run
 read the context size from the model itself (`llama.py:393-396`,
 `n_ctx = self._model.n_ctx_train()`) — the closest match to
 `node-llama-cpp`'s default behavior.
+
+## `n_gpu_layers` default differs from `node-llama-cpp` (much bigger impact)
+
+`node-llama-cpp` auto-detects and uses available GPU acceleration by default.
+`llama_cpp.Llama` defaults `n_gpu_layers=0` (`llama.py:65`) — **every layer
+runs on CPU** even when a GPU (e.g. Metal on Apple Silicon) is available and
+gets initialized in the logs. GPU device init in the logs does NOT mean the
+model is actually running on it.
+
+This went unnoticed on the small 1.7B model (CPU inference was tolerable —
+~97 tokens/sec on an M4 Max), but running the 8B Apertus model
+([`../03_translation/translation.py`](../03_translation/translation.py))
+CPU-only took 40+ minutes and never finished.
+
+**Fix:** pass `n_gpu_layers=-1` to `Llama(...)` to offload every layer to
+GPU (matches `node-llama-cpp`'s default). Applied to both `01_intro` and
+`03_translation`.
