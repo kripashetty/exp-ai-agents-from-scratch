@@ -23,10 +23,19 @@ directory (not duplicated here) — see [`../DOWNLOAD.md`](../DOWNLOAD.md) for
 how to fetch them.
 
 Examples using Ollama require the Ollama server running locally
-(`ollama serve`) and the relevant model pulled, e.g.:
+and the relevant model pulled, e.g.:
 
 ```bash
 ollama pull qwen2.5-coder:7b
+```
+
+For examples that demonstrate concurrent requests (e.g. `05_batch`), start
+the server with more than one parallel slot — Ollama defaults to
+`OLLAMA_NUM_PARALLEL=1`, which silently serializes concurrent requests to
+the same model even if the client dispatches them concurrently:
+
+```bash
+OLLAMA_NUM_PARALLEL=2 ollama serve
 ```
 
 ## Running an example
