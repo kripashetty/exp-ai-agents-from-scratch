@@ -44,6 +44,7 @@ async def main() -> None:
         # runs the whole decide -> call -> respond loop internally, Ollama's
         # chat() only returns the tool call request - executing it and
         # feeding the result back is on us.
+        print(response.message.model_dump())
         messages.append(response.message.model_dump())
         for call in response.message.tool_calls:
             handler = AVAILABLE_FUNCTIONS[call.function.name]
